@@ -1,0 +1,26 @@
+#!/bin/bash
+
+CONFIGPATH=~/Documents/aws
+
+case "$1" in
+    c)
+        # create
+        cfncluster -c $CONFIGPATH/config create --norollback cluster$2
+        ;;
+    l)
+        # list. Additionally to the cluster name, output also the public ip
+        # cfncluster -c $CONFIGPATH/config list
+        echo "::Listing stacks"
+        aws cloudformation describe-stacks \
+        --query 'Stacks[].[StackName, [Outputs[?OutputKey == `MasterPublicIP`].OutputValue][0][0]]' \
+        --output text
+        ;;
+    d)
+        # delete
+        cfncluster -c $CONFIGPATH/config delete cluster$2    
+        ;;
+    *)
+        echo "Usage: cfnc c|l|d (arg 2)"
+        exit 1
+        ;;
+esac    
