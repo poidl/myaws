@@ -1,3 +1,4 @@
 #!/bin/bash
 
-cfnc l|grep $1|awk '{print $2}'
+IP=$(cfnc l|grep $1|awk '{print $2}')
+ssh centos@$IP

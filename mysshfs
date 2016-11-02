@@ -1,0 +1,5 @@
+#!/bin/bash
+
+IP=$(cfnc l|grep $1|awk '{print $2}')
+sshfs centos@$IP:/home/centos ~/work/remote -C  -o allow_other
+
