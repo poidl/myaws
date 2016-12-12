@@ -1,5 +1,6 @@
 #!/bin/bash
-# adapted from J. Saryerwinnie's reinvent talk https://www.youtube.com/watch?v=TnfqJYPjD9I
+
+# Adapted from J. Saryerwinnie's talk https://www.youtube.com/watch?v=TnfqJYPjD9I
 
 list_amis() {
     local region_name="$1"
@@ -35,5 +36,3 @@ else
     list_amis "$region_name"
 fi
                             
-
-# list_amis "ap-southeast-1"
