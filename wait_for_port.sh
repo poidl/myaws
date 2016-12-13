@@ -5,11 +5,10 @@
 if [ $# -ne 2 ]; then
     errexit 'Usage: wait_for_port.sh IP PORT'
 fi
-
-nc -z $1 $2
-while test $? -gt 0
+nc -z -w 2 $1 $2
+while test $? -ne 0
 do
-        sleep 5 
         echo "Waiting for port "$2"..."
-        nc -z $1 $2
+        sleep 3
+        nc -z -w 2 $1 $2
 done
