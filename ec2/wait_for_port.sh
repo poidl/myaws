@@ -9,6 +9,6 @@ nc -z -w 2 $1 $2
 while test $? -ne 0
 do
         echo "Waiting for port "$2"..."
-        sleep 3
+        sleep 5
         nc -z -w 2 $1 $2
 done

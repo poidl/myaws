@@ -1,13 +1,15 @@
 #!/bin/bash
 
-sg_groupid=$MYAWS_SECURITY_GROUP_ID
 
-MYIP=$(wget http://ipinfo.io/ip -qO -)
-
-function errexit {
-    echo "*MYERROR* "$1 1>&2
+errexit() {
+    echo "*MYERROR* in $(basename $0): "$1 1>&2
     exit 1
 }
+
+[ ! -z $MYAWS_SECURITY_GROUP_ID ] || errexit "MYAWS_SECURITY_GROUP_ID not set"
+
+sg_groupid=$MYAWS_SECURITY_GROUP_ID
+MYIP=$(wget http://ipinfo.io/ip -qO -)
 
 sg_ssh_ingress() {
     ssh_cidr=$(aws ec2 describe-security-groups \

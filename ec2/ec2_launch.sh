@@ -2,16 +2,22 @@
 
 # Adapted from J. Saryerwinnie's talk https://www.youtube.com/watch?v=TnfqJYPjD9I
 
+errexit() {
+    echo "*MYERROR* in $(basename $0): "$1 1>&2
+    exit 1
+}
+
+[ ! -z $AWS_DEFAULT_REGION ] || errexit "AWS_DEFAULT_REGION not set"
+[ ! -z $MYAWS_INSTANCE_TYPE ] || errexit "MYAWS_INSTANCE_TYPE not set"
+[ ! -z $MYAWS_KEY_NAME ] || errexit "MYAWS_KEY_NAME not set"
+[ ! -z $MYAWS_SECURITY_GROUP_ID ] || errexit "MYAWS_SECURITY_GROUP_ID not set"
+
 launch_instance() {
     local instancetype=$MYAWS_INSTANCE_TYPE
     local keyname=$MYAWS_KEY_NAME
     local secgroupid=$MYAWS_SECURITY_GROUP_ID
     local region=${AWS_DEFAULT_REGION:-$(aws configure get region)}
 
-    function errexit {
-        echo "*MYERROR* "$1 1>&2
-        exit 1
-    }
 
     if [ $# -ne 0 ]; then
         errexit 'Usage: ec2_launch.sh'
