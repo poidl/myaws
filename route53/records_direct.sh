@@ -5,7 +5,7 @@ errexit() {
     exit 1
 }
 
-! -z $MYAWS_ROUTE53_TEMPLATE_TOA ] || errexit "MYAWS_ROUTE53_TEMPLATE_TOA not set"
+[ ! -z $MYAWS_ROUTE53_TEMPLATE_TOA ] || errexit "MYAWS_ROUTE53_TEMPLATE_TOA not set"
 [ ! -z $MYAWS_HOSTEDZONE_DN ] || errexit "MYAWS_HOSTEDZONE_DN not set"
 
 

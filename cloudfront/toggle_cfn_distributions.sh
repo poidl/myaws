@@ -23,9 +23,9 @@ toggle() {
 
     # Test this here:
     # TODO: test if dns records point to a plain (non-alias) A record
-    ./cform_cfn_delete.sh
+    cform_cfn_delete.sh
     aws cloudformation wait stack-delete-complete --stack-name $MYAWS_CFNSTACKNAME
-    ./cform_cfn_create.sh $1
+    cform_cfn_create.sh $1
     aws cloudformation wait stack-create-complete --stack-name $MYAWS_CFNSTACKNAME
 }
 
