@@ -11,7 +11,7 @@ errexit() {
 sg_groupid=$MYAWS_SECURITY_GROUP_ID
 MYIP=$(wget http://ipinfo.io/ip -qO -)
 
-sg_ssh_ingress() {
+sg_ingress() {
     ssh_cidr=$(aws ec2 describe-security-groups \
         --group-ids "$sg_groupid" \
         --query "SecurityGroups[*].IpPermissions[?FromPort==\`22\`].IpRanges" \
@@ -25,7 +25,7 @@ sg_ssh_ingress() {
 }
 
 if [ $# -ne 0 ]; then
-    errexit 'Usage: sg_ssh_ingress.sh'
+    errexit 'Usage: set_security_group_production.sh'
 fi
 
-sg_ssh_ingress
+sg_ingress
