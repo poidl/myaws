@@ -11,16 +11,34 @@ errexit() {
 sg_groupid=$MYAWS_SECURITY_GROUP_ID
 MYIP=$(wget http://ipinfo.io/ip -qO -)
 
-sg_ssh_ingress() {
-    ssh_cidr=$(aws ec2 describe-security-groups \
+sg_ingress() {
+
+    # SSH
+    cidr=$(aws ec2 describe-security-groups \
         --group-ids "$sg_groupid" \
         --query "SecurityGroups[*].IpPermissions[?FromPort==\`22\`].IpRanges" \
         --output text) || errexit "Can't find SSH ingress ip addresses"
-    for i in $ssh_cidr; do
+    for i in $cidr; do
         echo "Revoking SSH ingress from $i"
         aws ec2 revoke-security-group-ingress --group-id "$sg_groupid" --protocol tcp --port 22 --cidr "$i"
+    done
+
+    # HTTP
+    cidr=$(aws ec2 describe-security-groups \
+        --group-ids "$sg_groupid" \
+        --query "SecurityGroups[*].IpPermissions[?FromPort==\`80\`].IpRanges" \
+        --output text) || errexit "Can't find HTTP ingress ip addresses"
+    for i in $cidr; do
         echo "Revoking HTTP ingress from $i"
         aws ec2 revoke-security-group-ingress --group-id "$sg_groupid" --protocol tcp --port 80 --cidr "$i"
+    done
+
+    # HTTPS
+    cidr=$(aws ec2 describe-security-groups \
+        --group-ids "$sg_groupid" \
+        --query "SecurityGroups[*].IpPermissions[?FromPort==\`443\`].IpRanges" \
+        --output text) || errexit "Can't find HTTPS ingress ip addresses"
+    for i in $cidr; do
         echo "Revoking HTTPS ingress from $i"
         aws ec2 revoke-security-group-ingress --group-id "$sg_groupid" --protocol tcp --port 443 --cidr "$i"
     done
@@ -33,7 +51,7 @@ sg_ssh_ingress() {
 }
 
 if [ $# -ne 0 ]; then
-    errexit 'Usage: sg_ssh_ingress.sh'
+    errexit 'Usage: set_security_group_testing.sh'
 fi
 
-sg_ssh_ingress
+sg_ingress
